@@ -87,10 +87,11 @@ fn get_http_request_line(stream: &mut TcpStream) -> String {
 fn format_ok_response(content: &str) -> String {
     format!(
         "HTTP/1.1 200 OK
-        Content-length: {}
-        Content-Type: application/json
+Content-length: {}
+Content-Type: application/json
+Access-Control-Allow-Origin: *
 
-        {}",
+{}",
         content.len(),
         content
     )
@@ -100,10 +101,10 @@ fn format_ok_response(content: &str) -> String {
 fn format_error_response(content: &str) -> String {
     format!(
         "HTTP/1.1 500 Internal Server Error
-        Content-length: {}
-        Content-Type: application/json
+Content-length: {}
+Content-Type: application/json
 
-        {}",
+{}",
         content.len(),
         content
     )
