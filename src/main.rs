@@ -50,7 +50,7 @@ fn handle_connection(mut stream: TcpStream) {
             player::advance_movie(endpoint[1].parse::<u16>().unwrap());
             format_ok_response("")
         },
-        "stop" => {
+        "quit" => {
             player::quit_movie();
             format_ok_response("")
         },
