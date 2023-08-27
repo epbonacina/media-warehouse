@@ -75,14 +75,17 @@ pub fn quit_movie() {
 pub fn rewind_movie(seconds: u16) {
     let offset = format!("{seconds}-");
     let _ = Command::new("playerctl")
+        .arg("--player=vlc")
         .arg("position")
         .arg(offset)
         .output();
 }
 
 pub fn advance_movie(seconds: u16) {
+    println!("Trying to advance {seconds} seconds");
     let offset = format!("{seconds}+");
     let _ = Command::new("playerctl")
+        .arg("--player=vlc")
         .arg("position")
         .arg(offset)
         .output();
