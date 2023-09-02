@@ -4,7 +4,7 @@ use std::process::Command;
 use serde::{Deserialize, Serialize};
 use serde_json;
 
-const MOVIES_DESCRIPTOR_PATH: &str = "movies.json";
+const MOVIES_DESCRIPTOR_PATH: &str = "src/movies/movies.json";
 const MOVIES_DIRECTORY_PATH: &str = "src/movies";
 
 #[derive(Serialize, Deserialize)]

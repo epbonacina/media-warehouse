@@ -9,7 +9,7 @@ struct Request {
 }
 
 fn main() {
-    let listener = TcpListener::bind("192.168.0.123:7878").unwrap();
+    let listener = TcpListener::bind("0.0.0.0:7878").unwrap();
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
