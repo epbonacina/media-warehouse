@@ -43,7 +43,6 @@ fn get_movies() -> Vec<Movie> {
             Err(e) => println!("Got an error: {e}"),
         }
     }
-    println!("{}", movies.len());
     movies
 }
 
