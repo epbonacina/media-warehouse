@@ -67,7 +67,7 @@ pub fn get_movies_as_json() -> String {
 
 pub fn start_movie(id: u32) -> Result<(), u32> {
     let movie = find_movie(id)?;
-    let movie_path = format!("{}/{}", MOVIES_DIRECTORY_PATH, movie.id);
+    let movie_path = format!("{}/{}", MOVIES_DIRECTORY_PATH, movie.name);
     let _ = Command::new("vlc")
         .arg("--play-and-exit")
         .arg("--fullscreen")
