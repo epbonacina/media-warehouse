@@ -1,17 +1,18 @@
-use std::fs;
+use glob::glob;
+use std::fs::File;
+use std::io::BufReader;
 use std::process::Command;
 
+use mp4;
 use serde::{Deserialize, Serialize};
 use serde_json;
 
-const MOVIES_DESCRIPTOR_PATH: &str = "src/movies/movies.json";
 const MOVIES_DIRECTORY_PATH: &str = "src/movies";
 
 #[derive(Serialize, Deserialize)]
 pub struct Movie {
     id: u32,
     name: String,
-    description: String,
     duration: String,
 }
 
@@ -27,12 +28,36 @@ fn find_movie(id: u32) -> Result<Movie, u32> {
 }
 
 fn get_movies() -> Vec<Movie> {
-    let file_content = fs::read_to_string(MOVIES_DESCRIPTOR_PATH).unwrap();
-    let movies: Vec<Movie> = match serde_json::from_str(&file_content) {
-        Ok(d) => d,
-        Err(_) => return Vec::new(),
-    };
+    let mut movies = Vec::new();
+    let movies_pattern = MOVIES_DIRECTORY_PATH.to_string() + "/*.mp4";
+    for (idx, entry) in glob(&movies_pattern)
+        .expect("Could not find your movies directory")
+        .enumerate()
+    {
+        match entry {
+            Ok(path) => movies.push(Movie {
+                id: idx as u32,
+                name: path.file_name().unwrap().to_str().unwrap().to_string(),
+                duration: get_movie_duration(&format!("{:?}", path.display()).trim_matches('"')),
+            }),
+            Err(e) => println!("Got an error: {e}"),
+        }
+    }
+    println!("{}", movies.len());
     movies
+}
+
+fn get_movie_duration(filepath: &str) -> String {
+    println!("Reading file {filepath}");
+    let f = File::open(filepath).unwrap();
+    let size = f
+        .metadata()
+        .expect("Could not get size of {filepath}")
+        .len();
+    let reader = BufReader::new(f);
+
+    let mp4 = mp4::Mp4Reader::read_header(reader, size).unwrap();
+    format!("{:.2}", mp4.duration().as_secs_f64()/60f64)
 }
 
 pub fn get_movies_as_json() -> String {
